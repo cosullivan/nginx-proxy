@@ -296,7 +296,7 @@ server {
 		grpc_pass {{ trim $proto }}://{{ trim $upstream_name }};        
         grpc_set_header X-Real-IP $remote_addr;
         grpc_set_header ssl-client-cert $ssl_client_escaped_cert;
-        #grpc_set_header ssl-client-verify $ssl_client_verify;
+        grpc_set_header ssl-client-verify $ssl_client_verify;
         #grpc_set_header ssl-client-subject-dn $ssl_client_s_dn;
         #grpc_set_header ssl-client-issuer-dn $ssl_client_i_dn;
 		{{ else }}
