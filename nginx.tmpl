@@ -190,6 +190,9 @@ upstream {{ $upstream_name }} {
 {{/* Use the cert specified on the container or fallback to the best vhost match */}}
 {{ $cert := (coalesce $certName $vhostCert) }}
 
+{{/* The name of the client certiticate that is to be used for verifying client certificates */}}
+{{ $clientCert := (first (groupByKeys $containers "Env.CLIENT_CERTIFICATE")) }}
+
 {{ $is_https := (and (ne $https_method "nohttps") (ne $cert "") (exists (printf "/etc/nginx/certs/%s.crt" $cert)) (exists (printf "/etc/nginx/certs/%s.key" $cert))) }}
 
 {{ if $is_https }}
@@ -266,8 +269,9 @@ server {
 	ssl_trusted_certificate {{ printf "/etc/nginx/certs/%s.chain.pem" $cert }};
 	{{ end }}
 
-    {{ if eq $proto "grpc" }}
-    ssl_verify_client optional_no_ca;
+    {{ if (exists (printf "/etc/nginx/certs/%s.pem" $clientCert)) }}
+    ssl_verify_client on;
+    ssl_client_certificate {{ printf "/etc/nginx/certs/%s.pem" $clientCert }};
     {{ end }}
 
 	{{ if (not (or (eq $https_method "noredirect") (eq $hsts "off"))) }}
