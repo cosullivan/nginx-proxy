@@ -267,7 +267,7 @@ server {
 	{{ end }}
 
     {{ if (exists (printf "/etc/nginx/certs/%s.pem" $clientCert)) }}
-	ssl_verify_client $clientCertVerify;
+	ssl_verify_client {{ $clientCertVerify }};
 	ssl_client_certificate {{ printf "/etc/nginx/certs/%s.pem" $clientCert }};
     {{ end }}
 
