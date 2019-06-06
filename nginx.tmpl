@@ -188,6 +188,7 @@ upstream {{ $upstream_name }} {
 
 {{/* The name of the client certiticate that is to be used for verifying client certificates */}}
 {{ $clientCert := (first (groupByKeys $containers "Env.CLIENT_CERTIFICATE")) }}
+{{ $clientCertVerify := or (first (groupByKeys $containers "Env.CLIENT_CERTIFICATE_VERIFY")) "optional" }}
 
 {{ $is_https := (and (ne $https_method "nohttps") (ne $cert "") (exists (printf "/etc/nginx/certs/%s.crt" $cert)) (exists (printf "/etc/nginx/certs/%s.key" $cert))) }}
 
@@ -266,7 +267,7 @@ server {
 	{{ end }}
 
     {{ if (exists (printf "/etc/nginx/certs/%s.pem" $clientCert)) }}
-	ssl_verify_client optional;
+	ssl_verify_client $clientCertVerify;
 	ssl_client_certificate {{ printf "/etc/nginx/certs/%s.pem" $clientCert }};
     {{ end }}
 
