@@ -266,9 +266,9 @@ server {
 	ssl_trusted_certificate {{ printf "/etc/nginx/certs/%s.chain.pem" $cert }};
 	{{ end }}
 
-    {{ if (exists (printf "/etc/nginx/certs/%s.pem" $clientCert)) }}
+    {{ if (exists (printf "/etc/nginx/certs/%s.crt" $clientCert)) }}
 	ssl_verify_client {{ $clientCertVerify }};
-	ssl_client_certificate {{ printf "/etc/nginx/certs/%s.pem" $clientCert }};
+	ssl_client_certificate {{ printf "/etc/nginx/certs/%s.crt" $clientCert }};
     {{ end }}
 
 	{{ if (not (or (eq $https_method "noredirect") (eq $hsts "off"))) }}
@@ -292,7 +292,7 @@ server {
         {{ else if eq $proto "grpc" }}
 		grpc_pass {{ trim $proto }}://{{ trim $upstream_name }};        
         grpc_set_header X-Real-IP $remote_addr;
-        {{ if (exists (printf "/etc/nginx/certs/%s.pem" $clientCert)) }}
+        {{ if (exists (printf "/etc/nginx/certs/%s.crt" $clientCert)) }}
         grpc_set_header ssl-client-cert $ssl_client_escaped_cert;
         grpc_set_header ssl-client-verify $ssl_client_verify;
         grpc_set_header ssl-client-subject-dn $ssl_client_s_dn;
