@@ -269,6 +269,7 @@ server {
     {{ if (exists (printf "/etc/nginx/certs/%s" $clientCert)) }}
 	ssl_verify_client {{ $clientCertVerify }};
 	ssl_client_certificate {{ printf "/etc/nginx/certs/%s" $clientCert }};
+    ssl_verify_depth 3;
     {{ end }}
 
 	{{ if (not (or (eq $https_method "noredirect") (eq $hsts "off"))) }}
