@@ -298,6 +298,7 @@ server {
         grpc_set_header ssl-client-verify $ssl_client_verify;
         grpc_set_header ssl-client-subject-dn $ssl_client_s_dn;
         grpc_set_header ssl-client-issuer-dn $ssl_client_i_dn;
+        grpc_set_header ssl-client-fingerprint $ssl_client_fingerprint;        
         {{ end }}
 		{{ else }}
 		proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
