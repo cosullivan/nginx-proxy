@@ -296,8 +296,8 @@ server {
         {{ if (exists (printf "/etc/nginx/certs/%s" $clientCert)) }}
         grpc_set_header ssl-client-cert $ssl_client_escaped_cert;
         grpc_set_header ssl-client-verify $ssl_client_verify;
-        grpc_set_header ssl-client-subject-dn $ssl_client_s_dn;
-        grpc_set_header ssl-client-issuer-dn $ssl_client_i_dn;
+        grpc_set_header ssl-client-subject-dn $ssl_client_s_dn_legacy;
+        grpc_set_header ssl-client-issuer-dn $ssl_client_i_dn_legacy;
         grpc_set_header ssl-client-fingerprint $ssl_client_fingerprint;        
         {{ end }}
 		{{ else }}
