@@ -300,6 +300,9 @@ server {
         grpc_set_header ssl-client-issuer-dn $ssl_client_i_dn;
         grpc_set_header ssl-client-fingerprint $ssl_client_fingerprint;        
         {{ end }}
+        {{ else if eq $proto "grpcs" }}
+        grpc_pass {{ trim $proto }}://{{ trim $upstream_name }};        
+        grpc_set_header X-Real-IP $remote_addr;
 		{{ else }}
 		proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
 		{{ end }}
@@ -347,7 +350,7 @@ server {
 		root   {{ trim $vhost_root }};
 		include fastcgi.conf;
 		fastcgi_pass {{ trim $upstream_name }};
-        {{ else if eq $proto "grpc" }}
+        {{ else if (or (eq $proto "grpc") (eq $proto "grpcs")) }}
 		grpc_pass {{ trim $proto }}://{{ trim $upstream_name }};        
         grpc_set_header X-Real-IP $remote_addr;
 		{{ else }}
